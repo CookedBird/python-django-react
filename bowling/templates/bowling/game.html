@@ -1,0 +1,64 @@
+<style type="text/css">
+    .split {
+        float: left;
+        width: 16px;
+        height: 16px;
+    }
+    .pins {
+        border: 1px black solid; 
+        float: left;
+        width: 16px;
+        height: 16px;
+    }
+    .score {
+        width: 16px;
+        height: 16px;
+    }
+    .round {
+        border: 1px black solid; 
+    }
+    .top {
+        height: 20px;
+    }
+</style> 
+
+<h1>Game {{game.id}}</h1>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<table>
+  <tr>
+    {% for round in score %}
+        {% if not round.throw_3 %}
+            <td class="round">
+                <div class="top">
+                    <div class="split"></div>
+                    <div class="pins">{{round.throw_1}}</div>
+                    <div class="pins">{{round.throw_2}}</div> 
+                </div> 
+                <div class="score">{{round.score}}</div>
+            </td>
+        {% else %}
+            <td class="round">
+                <div class="top">
+                    <div class="split"></div>
+                    <div class="pins">{{round.throw_1}}</div>
+                    <div class="pins">{{round.throw_2}}</div> 
+                    <div class="pins">{{round.throw_3}}</div> 
+                </div> 
+                <div class="score">{{round.score}}</div>
+            </td>
+        {% endif %}
+    {% endfor %}
+  </tr>
+</table>
+
+{% if not game.complete %}
+<form action="{% url 'bowling:throw' game.id %}" method="post">
+{% csrf_token %}
+<input type="number" name="pins">
+<input type="submit" value="throw">
+</from>
+{% else %}
+<p>Game is over</p>
+{% endif %}
